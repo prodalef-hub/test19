@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AKARI | هویج پیر</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+        :root {
+            --orange: #FF6B35;
+            --orange-glow: rgba(255, 107, 53, 0.3);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* ===== کرسر سفارشی ===== */
+        .custom-cursor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--orange);
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
+            transform: translate(-50%, -50%);
+            transition: transform 0.15s ease, opacity 0.2s ease;
+            letter-spacing: 2px;
+            opacity: 0.9;
+        }
+        .custom-cursor.hidden {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+
+        /* ===== سایر استایل‌ها ===== */
+        .page-1 {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            background: radial-gradient(ellipse at center, #1a0a00 0%, #0a0a0a 70%);
+            z-index: 1;
+        }
+        .page-1.hidden {
+            display: none;
+        }
+        .floating-icons {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .float-image {
+            position: absolute;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            width: 2.8rem;
+            height: 2.8rem;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.05);
+            opacity: 0.12;
+        }
+        .float-image {
+            animation: none;
+        }
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--orange);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat 10s ease-in-out infinite;
+            box-shadow: 0 0 8px var(--orange-glow);
+        }
+        .particle:nth-child(1) {
+            left: 5%;
+            animation-delay: 0s;
+        }
+        .particle:nth-child(2) {
+            left: 15%;
+            animation-delay: 1.5s;
+        }
+        .particle:nth-child(3) {
+            left: 25%;
+            animation-delay: 3s;
+        }
+        .particle:nth-child(4) {
+            left: 35%;
+            animation-delay: 4.5s;
+        }
+        .particle:nth-child(5) {
+            left: 45%;
+            animation-delay: 0.8s;
+        }
+        .particle:nth-child(6) {
+            left: 55%;
+            animation-delay: 2.3s;
+        }
+        .particle:nth-child(7) {
+            left: 65%;
+            animation-delay: 5.5s;
+        }
+        .particle:nth-child(8) {
+            left: 75%;
+            animation-delay: 3.8s;
+        }
+        .particle:nth-child(9) {
+            left: 85%;
+            animation-delay: 1.2s;
+        }
+        .particle:nth-child(10) {
+            left: 95%;
+            animation-delay: 4.2s;
+        }
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1);
+                opacity: 0;
+            }
+        }
+        .landing-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 700px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+        }
+        .landing-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FF6B35, #FF8C42, #FFB347);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+        .landing-sub {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: #ccc;
+            margin-bottom: 0.5rem;
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .landing-sub .akari {
+            color: var(--orange);
+            font-weight: 600;
+        }
+        .landing-sub .havig {
+            color: #999;
+            font-weight: 300;
+        }
+        .landing-desc {
+            font-size: 0.9rem;
+            color: #999;
+            max-width: 400px;
+            margin: 1rem auto 2rem;
+            line-height: 1.8;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+        .landing-desc small {
+            display: block;
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: 0.3rem;
+        }
+        .btn-start {
+            background: linear-gradient(135deg, var(--orange), #FF8C42);
+            color: #fff;
+            border: none;
+            padding: 0.8rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px var(--orange-glow);
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-start:active {
+            transform: scale(0.95);
+        }
+        .footer-credit {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.2);
+            letter-spacing: 2px;
+            text-transform: lowercase;
+        }
+        .page-2 {
+            height: 100vh;
+            width: 100vw;
+            background: #0a0a0a;
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-2.active {
+            display: block;
+        }
+        .slide-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .slide {
+            position: absolute;
+            width: 90%;
+            max-width: 450px;
+            max-height: 80vh;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            pointer-events: none;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(255, 107, 53, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: var(--glass-bg);
+        }
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+        .slide img {
+            width: 100%;
+            height: auto;
+            max-height: 75vh;
+            object-fit: contain;
+            display: block;
+        }
+        .slide-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 0.8rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        .slide-label span {
+            color: var(--orange);
+        }
+        .slide-counter {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 10;
+        }
+        .slide-counter span {
+            color: var(--orange);
+        }
+        .slide-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--orange), #FF8C42);
+            z-index: 10;
+            transition: width 0.3s linear;
+            width: 0%;
+        }
+        .slide-back-btn {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #fff;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            z-index: 10;
+        }
+        .slide-back-btn:active {
+            transform: scale(0.95);
+        }
+        .touch-left,
+        .touch-right {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            z-index: 5;
+            opacity: 0;
+        }
+        .touch-left {
+            left: 0;
+            width: 50%;
+        }
+        .touch-right {
+            right: 0;
+            width: 50%;
+        }
+        @media (max-width: 480px) {
+            .landing-title {
+                font-size: 2.5rem;
+            }
+            .landing-sub {
+                font-size: 1.1rem;
+            }
+            .landing-desc {
+                font-size: 0.8rem;
+                padding: 0 1rem;
+            }
+            .btn-start {
+                padding: 0.6rem 2rem;
+                font-size: 0.9rem;
+            }
+            .slide {
+                width: 95%;
+                max-width: 350px;
+            }
+            .slide-label {
+                font-size: 0.7rem;
+                padding: 0.5rem;
+            }
+            .slide-counter {
+                top: 0.8rem;
+                right: 0.8rem;
+                font-size: 0.6rem;
+                padding: 0.2rem 0.6rem;
+            }
+            .slide-back-btn {
+                top: 0.8rem;
+                left: 0.8rem;
+                font-size: 0.6rem;
+                padding: 0.2rem 0.8rem;
+            }
+            .float-image {
+                width: 2rem;
+                height: 2rem;
+            }
+            .footer-credit {
+                font-size: 0.6rem;
+                bottom: 0.8rem;
+            }
+            .custom-cursor {
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 380px) {
+            .landing-title {
+                font-size: 2rem;
+            }
+            .slide {
+                max-width: 95%;
+            }
+        }
+        ::-webkit-scrollbar {
+            width: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== کرسر سفارشی "کیا" ===== -->
+    <div class="custom-cursor" id="customCursor">کیا</div>
+
+    <!-- ===== PAGE 1 ===== -->
+    <div class="page-1" id="page1">
+        <div class="floating-icons" id="floatingIconsContainer"></div>
+        <div class="particles">
+            <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+            <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+            <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="landing-content">
+            <div class="landing-title">سالامممم</div>
+            <div class="landing-sub">
+                <span class="akari">AKARI</span>
+                <span class="havig">(هویج پیر)</span>
+            </div>
+            <div class="landing-desc">This place was made for Akari.<small>If you're not Akari, you should probably leave.</small></div>
+            <button class="btn-start" onclick="goToSlideshow()">شروع</button>
+        </div>
+        <div class="footer-credit">ProdbyKiya</div>
+    </div>
+
+    <!-- ===== PAGE 2: SLIDESHOW ===== -->
+    <div class="page-2" id="page2">
+        <div class="floating-icons" style="z-index:0; opacity:0.4;" id="floatingIconsContainer2"></div>
+        <button class="slide-back-btn" onclick="goBack()">← بازگشت</button>
+        <div class="slide-counter">بیلبیلک <span id="currentSlideNum">۱</span> از <span id="totalSlides">۱۷</span></div>
+        <div class="slide-container" id="slideContainer"></div>
+        <div class="slide-progress" id="slideProgress"></div>
+        <div class="touch-left" id="touchLeft"></div>
+        <div class="touch-right" id="touchRight"></div>
+        <div class="footer-credit" style="position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); z-index:2; font-family:'Playfair Display', serif; font-size:0.7rem; font-weight:400; color:rgba(255,255,255,0.2); letter-spacing:2px; text-transform:lowercase;">ProdbyKiya</div>
+    </div>
+
+    <script>
+        // ===== کرسر سفارشی =====
+        const cursor = document.getElementById('customCursor');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            cursor.classList.remove('hidden');
+        });
+
+        document.addEventListener('mouseleave', () => {
+            cursor.classList.add('hidden');
+        });
+
+        // برای لمس، کرسر رو مخفی کن (در گوشی نمایش داده نشه)
+        document.addEventListener('touchstart', () => {
+            cursor.classList.add('hidden');
+        });
+
+        document.addEventListener('touchend', () => {
+            setTimeout(() => {
+                cursor.classList.remove('hidden');
+            }, 100);
+        });
+
+        // ===== لیست ۱۲ تا عکس =====
+        const imageLinks = [
+            'https://i.imgur.com/3iz3YlQ_d.webp?maxwidth=760&fidelity=grand',
+            'https://i.imgur.com/tnHmDh5_d.webp?maxwidth=760&fidelity=grand',
+            'https://i.imgur.com/a776aKh_d.webp?maxwidth=760&fidelity=grand',
+            'https://i.imgur.com/ZCDpvNz_d.webp?maxwidth=760&fidelity=grand',
+            'https://i.imgur.com/gTyHrKR_d.webp?maxwidth=760&fidelity=grand',
+            'https://i.imgur.com/NPJTXKI_d.webp?maxwidth=760&fidelity=grand',
+            'https://i.imgur.com/gvpKqUV_d.webp?maxwidth=760&fidelity=grand',
+            'https://i.imgur.com/3m7nhyQ_d.webp?maxwidth=760&fidelity=grand',
+            'https://i.imgur.com/2gv8nAZ_d.webp?maxwidth=760&fidelity=grand',
+            'https://i.imgur.com/QWYwbyu_d.webp?maxwidth=760&fidelity=grand',
+            'https://i.imgur.com/UUyR5n5_d.webp?maxwidth=760&fidelity=grand',
+            'https://i.imgur.com/tZLOkaH_d.webp?maxwidth=760&fidelity=grand'
+        ];
+
+        // ===== تابع تبدیل لینک =====
+        function getDirectImageUrl(url) {
+            let base = url.split('_d.webp')[0];
+            return base + '.jpg';
+        }
+
+        // ===== ساخت عکس‌های شناور =====
+        function createFloatingImages(containerId) {
+            const container = document.getElementById(containerId);
+            const images = [];
+
+            imageLinks.forEach((link) => {
+                const img = document.createElement('img');
+                img.className = 'float-image';
+                img.src = getDirectImageUrl(link);
+                img.alt = 'تصویر شناور';
+                img.loading = 'lazy';
+
+                const top = Math.random() * 90 + 5;
+                const left = Math.random() * 90 + 5;
+                const size = 1.8 + Math.random() * 1.5;
+
+                img.style.top = top + '%';
+                img.style.left = left + '%';
+                img.style.width = size + 'rem';
+                img.style.height = size + 'rem';
+                img.style.opacity = 0.08 + Math.random() * 0.1;
+
+                container.appendChild(img);
+                images.push(img);
+            });
+
+            return images;
+        }
+
+        let floatingImages1 = [];
+        let floatingImages2 = [];
+
+        // ===== افکت تعاملی =====
+        function initInteractiveEffect(imagesArray, containerId) {
+            const container = document.getElementById(containerId);
+            let mouseX = -1000,
+                mouseY = -1000;
+            let isMouseNear = false;
+
+            document.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                mouseX = ((e.clientX - rect.left) / rect.width) * 100;
+                mouseY = ((e.clientY - rect.top) / rect.height) * 100;
+                isMouseNear = true;
+            });
+
+            document.addEventListener('mouseleave', () => {
+                isMouseNear = false;
+            });
+
+            container.addEventListener('touchmove', (e) => {
+                const touch = e.touches[0];
+                const rect = container.getBoundingClientRect();
+                mouseX = ((touch.clientX - rect.left) / rect.width) * 100;
+                mouseY = ((touch.clientY - rect.top) / rect.height) * 100;
+                isMouseNear = true;
+            }, { passive: true });
+
+            container.addEventListener('touchend', () => {
+                isMouseNear = false;
+            }, { passive: true });
+
+            function animate() {
+                imagesArray.forEach((img) => {
+                    const imgCenterX = parseFloat(img.style.left);
+                    const imgCenterY = parseFloat(img.style.top);
+
+                    if (isMouseNear) {
+                        const dx = mouseX - imgCenterX;
+                        const dy = mouseY - imgCenterY;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < 25) {
+                            const pull = 0.04;
+                            img.style.left = (imgCenterX + dx * pull) + '%';
+                            img.style.top = (imgCenterY + dy * pull) + '%';
+                            img.style.transform = 'scale(1.2)';
+                            img.style.opacity = Math.min(0.3, parseFloat(img.style.opacity) + 0.01);
+                            img.style.boxShadow = '0 0 40px rgba(255,107,53,0.3)';
+                        } else if (dist < 45) {
+                            const push = 0.03;
+                            img.style.left = (imgCenterX - dx * push) + '%';
+                            img.style.top = (imgCenterY - dy * push) + '%';
+                            img.style.transform = 'scale(0.9)';
+                            img.style.opacity = Math.max(0.05, parseFloat(img.style.opacity) - 0.005);
+                            img.style.boxShadow = '0 0 10px rgba(255,107,53,0.05)';
+                        } else {
+                            img.style.transform = 'scale(1)';
+                            img.style.opacity = Math.min(0.2, parseFloat(img.style.opacity) + 0.002);
+                            img.style.boxShadow = '0 0 20px rgba(255,107,53,0.05)';
+                        }
+                    } else {
+                        img.style.transform = 'scale(1)';
+                        img.style.opacity = Math.min(0.2, parseFloat(img.style.opacity) + 0.002);
+                        img.style.boxShadow = '0 0 20px rgba(255,107,53,0.05)';
+                    }
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        // ===== ساخت اسلایدها =====
+        const slideImages = [
+            'https://i.imgur.com/lSuQ1RO_d.webp?maxwidth=760&fidelity=grand',
+            'https://i.imgur.com/eomSxlM_d.webp?maxwidth=1520&fidelity=grand',
+            'https://i.imgur.com/UbfPMeV_d.webp?maxwidth=1520&fidelity=grand',
+            'https://i.imgur.com/OGRzdrN_d.webp?maxwidth=1520&fidelity=grand',
+            'https://i.imgur.com/MZDaDIP_d.webp?maxwidth=1520&fidelity=grand',
+            'https://i.imgur.com/IEBjHRN_d.webp?maxwidth=1520&fidelity=grand',
+            'https://i.imgur.com/EMzjd2Q_d.webp?maxwidth=1520&fidelity=grand',
+            'https://i.imgur.com/guWTqd3_d.webp?maxwidth=1520&fidelity=grand',
+            'https://i.imgur.com/8tKRorr_d.webp?maxwidth=1520&fidelity=grand',
+            'https://i.imgur.com/8Ibr9av_d.webp?maxwidth=1520&fidelity=grand',
+            'https://i.imgur.com/aVw037o_d.webp?maxwidth=1520&fidelity=grand',
+            'https://i.imgur.com/61hhDpH_d.webp?maxwidth=1520&fidelity=grand',
+            'https://i.imgur.com/Bbqtq1X_d.webp?maxwidth=1520&fidelity=grand',
+            'https://i.imgur.com/MW8iDWb_d.webp?maxwidth=1520&fidelity=grand',
+            'https://i.imgur.com/zCUGMvS_d.webp?maxwidth=1520&fidelity=grand',
+            'https://i.imgur.com/2cl3u3o_d.webp?maxwidth=760&fidelity=grand',
+            'https://i.imgur.com/HCBQgbR_d.webp?maxwidth=1520&fidelity=grand'
+        ];
+
+        const container = document.getElementById('slideContainer');
+        const totalSlides = slideImages.length;
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        slideImages.forEach((src, index) => {
+            const num = index + 1;
+            const slide = document.createElement('div');
+            slide.className = 'slide';
+            if (index === 0) slide.classList.add('active');
+            const directSrc = getDirectImageUrl(src);
+            slide.innerHTML = `
+                <img src="${directSrc}" alt="بیلبیلک شماره ${num}" loading="lazy" />
+                <div class="slide-label">بیلبیلک شماره <span>${num}</span></div>
+            `;
+            container.appendChild(slide);
+        });
+
+        // ===== کنترل اسلایدها =====
+        let currentIndex = 0;
+        let isPlaying = true;
+        let timer = null;
+        const slideDuration = 8000;
+
+        function updateSlide() {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === currentIndex);
+            });
+            document.getElementById('currentSlideNum').textContent = currentIndex + 1;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            document.getElementById('slideProgress').style.width = ((currentIndex + 1) / totalSlides * 100) + '%';
+        }
+
+        function nextSlide() {
+            if (currentIndex < totalSlides - 1) {
+                currentIndex++;
+                updateSlide();
+                resetTimer();
+            } else {
+                currentIndex = 0;
+                updateSlide();
+                resetTimer();
+            }
+        }
+
+        function prevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSlide();
+                resetTimer();
+            }
+        }
+
+        function goToSlideshow() {
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('page2').classList.add('active');
+            startTimer();
+        }
+
+        function goBack() {
+            document.getElementById('page1').classList.remove('hidden');
+            document.getElementById('page2').classList.remove('active');
+            stopTimer();
+            currentIndex = 0;
+            updateSlide();
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            if (isPlaying) startTimer();
+            else stopTimer();
+        }
+
+        function startTimer() {
+            stopTimer();
+            timer = setInterval(nextSlide, slideDuration);
+        }
+
+        function stopTimer() {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+        }
+
+        function resetTimer() {
+            if (isPlaying) startTimer();
+        }
+
+        document.getElementById('touchLeft').addEventListener('click', (e) => {
+            e.stopPropagation();
+            nextSlide();
+        });
+
+        document.getElementById('touchRight').addEventListener('click', (e) => {
+            e.stopPropagation();
+            prevSlide();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                if (e.key === ' ') {
+                    togglePlay();
+                    return;
+                }
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.key === 'Escape') {
+                goBack();
+            }
+        });
+
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        document.addEventListener('touchend', (e) => {
+            if (document.getElementById('page2').classList.contains('active')) {
+                const diff = touchStartX - e.changedTouches[0].screenX;
+                if (Math.abs(diff) > 40) {
+                    if (diff > 0) nextSlide();
+                    else prevSlide();
+                }
+            }
+        });
+
+        // ===== اجرا =====
+        floatingImages1 = createFloatingImages('floatingIconsContainer');
+        floatingImages2 = createFloatingImages('floatingIconsContainer2');
+        initInteractiveEffect(floatingImages1, 'floatingIconsContainer');
+        initInteractiveEffect(floatingImages2, 'floatingIconsContainer2');
+        updateSlide();
+    </script>
+
+</body>
+</html>
